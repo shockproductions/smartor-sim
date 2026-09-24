@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>SMaRTORsim</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="style.css" />
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <span class="brand">SMaRTOR<span class="brand-sub">sim</span></span>
+    <div class="runtime">
+      <button id="btn-play" title="Play / Pause">Pause</button>
+      <button id="btn-step" title="Step one frame">Step</button>
+      <button id="btn-reset-hover" title="Reset to hover">Reset Hover</button>
+      <button id="btn-reset-ground" title="Reset to ground">Reset Ground</button>
+      <label class="ts">Time scale
+        <input id="time-scale" type="range" min="0.1" max="4" step="0.05" value="1" />
+        <span id="time-scale-val">1.00x</span>
+      </label>
+      <span class="status" id="status-line">hover</span>
+    </div>
+  </header>
+
+  <aside id="left-panel" class="panel">
+    <div class="panel-title">Vehicle Parameters</div>
+    <div id="params-root"></div>
+  </aside>
+
+  <div id="splitter" title="Drag to resize bottom panel"></div>
+
+  <main id="center">
+    <div id="viewport"></div>
+    <div id="hud" class="hud"></div>
+    <div class="cam-controls">
+      <select id="cam-mode">
+        <option value="orbit">Orbit</option>
+        <option value="orbit-chase">Orbit Chase</option>
+        <option value="chase">Chase</option>
+        <option value="top">Top</option>
+        <option value="side">Side</option>
+        <option value="fpv">FPV</option>
+      </select>
+      <label><input type="checkbox" id="show-thrust" checked /> Thrust vectors</label>
+      <label><input type="checkbox" id="show-net" checked /> Net F/M</label>
+      <label><input type="checkbox" id="show-omega" /> Angular velocity</label>
+      <label><input type="checkbox" id="show-velocity" /> Velocity</label>
+      <label><input type="checkbox" id="show-axes" checked /> Body axes</label>
+    </div>
+  </main>
+
+  <aside id="right-panel" class="panel">
+    <div class="panel-title">Telemetry</div>
+    <div id="telemetry-root"></div>
+  </aside>
+
+  <section id="bottom-panel" class="panel">
+    <div class="panel-title">
+      Live Graphs
+      <span class="bp-controls">
+        <label><input type="checkbox" id="freeze-plots" /> Freeze</label>
+        <label>Window
+          <input id="plot-window" type="range" min="2" max="30" step="1" value="10" />
+          <span id="plot-window-val">10s</span>
+        </label>
+      </span>
+    </div>
+    <div id="plots-root"></div>
+  </section>
+
+  <section id="control-panel" class="panel">
+    <div class="panel-title">Pilot &amp; Control</div>
+    <div id="control-root"></div>
+  </section>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

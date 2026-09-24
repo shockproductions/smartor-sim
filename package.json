@@ -1,0 +1,10 @@
+{
+  "name": "smartor-sim",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "py -3 -m http.server 8000 --bind 127.0.0.1",
+    "test": "node test/sim-smoke.mjs"
+  }
+}
