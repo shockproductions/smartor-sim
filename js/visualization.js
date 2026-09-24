@@ -90,7 +90,7 @@ export class Viz {
       thrust: true, net: true, omega: false, velocity: false, axes: true,
     };
 
-    this.cameraMode = "orbit";
+    this.cameraMode = "orbit-chase";
     this.lastCfg = null;
 
     this.onResize = this.onResize.bind(this);

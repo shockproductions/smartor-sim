@@ -13,6 +13,18 @@ import { clamp, qToEuler, qRotate, v3, wrapPi } from "./mathx.js";
 import { simpleMixer, solveAllocator } from "./allocator.js";
 import { rotorPositions, rotorDirections, totalMass } from "./vehicle.js";
 
+// Demo mission loaded on startup: climb, fly a 5 m box with a height change,
+// then return and settle over the start point. World frame is +Y up.
+export function defaultMission() {
+  return [
+    { x: 0, y: 3,   z: 0, speed: 1.0, wait: 1 },
+    { x: 5, y: 3,   z: 0, speed: 1.5, wait: 0 },
+    { x: 5, y: 4,   z: 5, speed: 1.5, wait: 1 },
+    { x: 0, y: 4,   z: 5, speed: 1.5, wait: 0 },
+    { x: 0, y: 1.5, z: 0, speed: 1.0, wait: 1 },
+  ];
+}
+
 // Pilot-facing conventions used across the sim:
 //   roll  + = bank right
 //   pitch + = nose up
@@ -44,7 +56,7 @@ export function newPilot() {
       maxTiltDeg: 18,
       maxAccel: 1.8,
       velGain: 1.8,
-      waypoints: [],
+      waypoints: defaultMission(),
     },
   };
 }

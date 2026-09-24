@@ -1,6 +1,6 @@
 import { defaultConfig, newState, rotorDirections, rotorPositions, totalMass } from "../js/vehicle.js";
 import { buildEffectivenessMatrix, hoverTrim, simpleMixer, solveAllocator } from "../js/allocator.js";
-import { computeCommand, newCtrlState, newPilot } from "../js/controller.js";
+import { computeCommand, defaultMission, newCtrlState, newPilot } from "../js/controller.js";
 import { step } from "../js/physics.js";
 import { mat4Inv, qFromEuler, qToEuler, rad } from "../js/mathx.js";
 import { thrustFromCommand } from "../js/rotor.js";
@@ -272,6 +272,45 @@ function runWaypointMission() {
   assert(pilot.mission.currentIndex >= pilot.mission.waypoints.length - 1, "waypoint mission did not advance through all waypoints");
 }
 
+function runDefaultMission() {
+  const cfg = defaultConfig();
+  cfg.controlMode = "waypoint";
+  const state = newState();
+  const pilot = newPilot();
+  const ctrl = newCtrlState();
+  const trim = hoverTrim(cfg, rotorPositions(cfg), rotorDirections(cfg));
+
+  state.pos.y = 1.5;
+  state.act.c = trim.c;
+  state.act.o = [...trim.o];
+  state.cmd.c = trim.c;
+  state.cmd.o = [...trim.o];
+
+  const expected = defaultMission();
+  assert(pilot.mission.waypoints.length === expected.length, "new pilot should start with the demo mission loaded");
+  pilot.mission.active = true;
+
+  let completed = false;
+  let steps = 0;
+  for (; steps < 60 * 500; steps++) {
+    computeCommand(state, cfg, pilot, ctrl, DT);
+    step(state, cfg, DT);
+    const bad = nonFinitePaths(state);
+    assert(bad.length === 0, `demo mission produced non-finite values at step ${steps}: ${bad.join(", ")}`);
+    assert(!state.onGround, `demo mission touched the ground at step ${steps}`);
+    if (!pilot.mission.active && pilot.mission.status === "complete") {
+      completed = true;
+      break;
+    }
+  }
+
+  const last = expected[expected.length - 1];
+  assert(completed, "demo mission did not complete within 60 s");
+  assert(Math.hypot(state.pos.x - last.x, state.pos.z - last.z) < 0.45, `demo mission final horizontal error too large: ${state.pos.x}, ${state.pos.z}`);
+  assert(Math.abs(state.pos.y - last.y) < 0.2, `demo mission final altitude error too large: ${state.pos.y}`);
+  return steps * DT;
+}
+
 const cfg = defaultConfig();
 const positions = rotorPositions(cfg);
 const directions = rotorDirections(cfg);
@@ -293,5 +332,7 @@ runAllocatorAxisCheck();
 runStabilizeHover();
 runStabilizeRecovery();
 runWaypointMission();
+const demoSeconds = runDefaultMission();
 
+console.log(`demo mission completed in ${demoSeconds.toFixed(1)} s sim time`);
 console.log("sim smoke tests passed");

@@ -167,6 +167,11 @@ Mission behavior:
 - after wait completes, the next waypoint activates
 - the mission can optionally loop
 
+A demo mission is pre-loaded on startup, so pressing `Start` in the mission panel flies it
+straight away: climb to 3 m, fly a 5 m box while climbing to 4 m, then return and settle
+over the start point (about 28 s). `Demo` restores it after the list has been edited or cleared.
+It is defined by `defaultMission()` in [js/controller.js](js/controller.js).
+
 The UI for mission editing lives in [js/ui.js](js/ui.js).
 
 ## Visualization
@@ -178,7 +183,7 @@ Highlights:
 - vehicle mesh rebuilds live from geometry parameters
 - rotor discs and blade spin are visualized
 - thrust, net force, net moment, angular velocity, and velocity vectors can be toggled
-- `Orbit`, `Orbit Chase`, `Chase`, `Top`, `Side`, and `FPV` camera modes are available
+- `Orbit`, `Orbit Chase` (default), `Chase`, `Top`, `Side`, and `FPV` camera modes are available
 - the ground grid recenters around the vehicle to keep the scene readable over long motion
 
 ## UI / App Structure

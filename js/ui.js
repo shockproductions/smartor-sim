@@ -3,6 +3,8 @@
 // live config and pilot objects so changes take effect on the next physics
 // substep.
 
+import { defaultMission } from "./controller.js";
+
 const PARAM_SPEC = [
   {
     section: "Pilot Targets",
@@ -408,6 +410,9 @@ export class ControlUI {
     this.missionToggleBtn.addEventListener("click", () => this.toggleMission());
     const addBtn = document.createElement("button"); addBtn.textContent = "Add";
     addBtn.addEventListener("click", () => this.addWaypoint());
+    const demoBtn = document.createElement("button"); demoBtn.textContent = "Demo";
+    demoBtn.title = "Replace the list with the built-in demo mission";
+    demoBtn.addEventListener("click", () => this.loadDemoMission());
     const clearBtn = document.createElement("button"); clearBtn.textContent = "Clear";
     clearBtn.addEventListener("click", () => this.clearWaypoints());
     const loopLabel = document.createElement("label"); loopLabel.className = "mission-loop";
@@ -417,6 +422,7 @@ export class ControlUI {
     loopLabel.appendChild(document.createTextNode("Loop"));
     missionBar.appendChild(this.missionToggleBtn);
     missionBar.appendChild(addBtn);
+    missionBar.appendChild(demoBtn);
     missionBar.appendChild(clearBtn);
     missionBar.appendChild(loopLabel);
     colD.appendChild(missionBar);
@@ -466,6 +472,12 @@ export class ControlUI {
       speed: this.pilot.mission.defaultSpeed,
       wait: this.pilot.mission.defaultWait,
     });
+    this.renderMission();
+  }
+
+  loadDemoMission() {
+    this.clearWaypoints();
+    this.pilot.mission.waypoints = defaultMission();
     this.renderMission();
   }
 
